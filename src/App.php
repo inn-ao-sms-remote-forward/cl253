@@ -52,7 +52,7 @@ class App
 
     private function setMsg(): void
     {
-        $this->msg = (string) \filter_input(\INPUT_GET, 'msg', \FILTER_SANITIZE_STRING);
+        $this->msg = (string) \filter_input(\INPUT_GET, 'sms', \FILTER_SANITIZE_STRING);
 
         if ( ! $this->msg) {
             die('Invalid message.');
