@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace InnStudio\Cl253;
 
@@ -31,94 +31,94 @@ class App
         $this->setConfig();
 
         if ($this->send()) {
-            die(\json_encode([
+            exit(json_encode([
                 'code' => 0,
             ]));
         }
 
-        die(\json_encode([
+        exit(json_encode([
             'code' => -1,
         ]));
     }
 
     private function setCode(): void
     {
-        $this->verificationCode = (int) \filter_input(\INPUT_GET, 'code', \FILTER_VALIDATE_INT);
+        $this->verificationCode = (int) filter_input(\INPUT_GET, 'code', \FILTER_VALIDATE_INT);
 
-        if ( ! $this->verificationCode) {
-            die('Invalid verification code');
+        if (!$this->verificationCode) {
+            exit('Invalid verification code');
         }
     }
 
     private function setMsg(): void
     {
-        $this->msg = (string) \filter_input(\INPUT_GET, 'sms', \FILTER_SANITIZE_STRING);
+        $this->msg = (string) filter_input(\INPUT_GET, 'sms', \FILTER_DEFAULT);
 
-        if ( ! $this->msg) {
-            die('Invalid message.');
+        if (!$this->msg) {
+            exit('Invalid message.');
         }
     }
 
     private function setPhoneNumber(): void
     {
-        $this->phoneNumber = (int) \filter_input(\INPUT_GET, 'number', \FILTER_VALIDATE_INT);
+        $this->phoneNumber = (int) filter_input(\INPUT_GET, 'number', \FILTER_VALIDATE_INT);
 
-        if ( ! $this->phoneNumber) {
-            die('Invalid phone number');
+        if (!$this->phoneNumber) {
+            exit('Invalid phone number');
         }
     }
 
     private function setConfig(): void
     {
-        if ( ! \is_readable($this->configPath)) {
-            die('Invalid config file path.');
+        if (!is_readable($this->configPath)) {
+            exit('Invalid config file path.');
         }
 
-        $config = \json_decode((string) \file_get_contents($this->configPath), true);
+        $config = json_decode((string) file_get_contents($this->configPath), true);
 
-        if ( ! \is_array($config)) {
-            die('Invalid config file content.');
+        if (!\is_array($config)) {
+            exit('Invalid config file content.');
         }
 
         [
-            'apiAccountId'  => $this->apiAccountId,
+            'apiAccountId' => $this->apiAccountId,
             'apiAccountPwd' => $this->apiAccountPwd,
-            'apiUrl'        => $this->apiUrl,
+            'apiUrl' => $this->apiUrl,
         ] = $config;
     }
 
     private function send(): bool
     {
-        $ch = \curl_init();
-        \curl_setopt($ch, \CURLOPT_URL, $this->apiUrl);
-        \curl_setopt($ch, \CURLOPT_HTTPHEADER, [
+        $ch = curl_init();
+        curl_setopt($ch, \CURLOPT_URL, $this->apiUrl);
+        curl_setopt($ch, \CURLOPT_HTTPHEADER, [
             'Content-Type: application/json; charset=utf-8',
         ]);
-        \curl_setopt($ch, \CURLOPT_RETURNTRANSFER, 1);
-        \curl_setopt($ch, \CURLOPT_POST, 1);
-        \curl_setopt($ch, \CURLOPT_POSTFIELDS, \json_encode([
-            'account'  => $this->apiAccountId,
+        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, \CURLOPT_POST, 1);
+        curl_setopt($ch, \CURLOPT_POSTFIELDS, json_encode([
+            'account' => $this->apiAccountId,
             'password' => $this->apiAccountPwd,
-            'phone'    => $this->phoneNumber,
-            'msg'      => \urlencode($this->msg),
-            'report'   => 'true',
+            'phone' => $this->phoneNumber,
+            'msg' => urlencode($this->msg),
+            'report' => 'true',
         ]));
-        \curl_setopt($ch, \CURLOPT_TIMEOUT, 60);
-        $res = \curl_exec($ch);
-        \curl_close($ch);
+        curl_setopt($ch, \CURLOPT_TIMEOUT, 60);
+        $res = curl_exec($ch);
+        curl_close($ch);
 
-        if ( ! $res) {
+        if (!$res) {
             return false;
         }
 
-        $json = \json_decode($res, true);
+        $json = json_decode($res, true);
 
-        if ( ! $json) {
+        if (!$json) {
             return false;
         }
 
         if ('0' !== $json['code']) {
-            \error_log($json['errorMsg']);
+            error_log($json['errorMsg']);
 
             return false;
         }

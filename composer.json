@@ -1,19 +1,20 @@
 {
-    "name": "kmvan/cl253",
-    "description": "创蓝253短信验证码服务 for INN AO",
-    "type": "project",
-    "license": "GPL-v3",
-    "authors": [
-        {
-            "name": "kmvan",
-            "email": "kmvan.com@gmail.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "InnStudio\\Cl253\\": "src/"
-        }
-    },
-    "minimum-stability": "stable",
-    "require": {}
+  "name": "kmvan/cl253",
+  "description": "创蓝253短信验证码服务 for INN AO",
+  "version": "1.0.1",
+  "type": "project",
+  "license": "GPL-v3",
+  "authors": [
+    {
+      "name": "kmvan",
+      "email": "kmvan.com@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "InnStudio\\Cl253\\": "src/"
+    }
+  },
+  "minimum-stability": "stable",
+  "require": {}
 }
